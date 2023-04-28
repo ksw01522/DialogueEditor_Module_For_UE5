@@ -18,6 +18,7 @@
 #include "DialogueAssetEditor/SEdNode_DialogueNode.h"
 #include "DialogueEditorHeaders.h"
 #include "DialogueHeaders.h"
+#include "Styling/AppStyle.h"
 
 
 #define LOCTEXT_NAMESPACE "EdGraphNode_DialogueNode"
@@ -62,7 +63,7 @@ protected:
 
 	const FSlateBrush* GetPinBorder() const
 	{
-		return FEditorStyle::GetBrush(TEXT("Graph.StateNode.Body"));
+		return FAppStyle::GetBrush(TEXT("Graph.StateNode.Body"));
 	}
 
 	virtual TSharedRef<FDragDropOperation> SpawnPinDragEvent(const TSharedRef<class SGraphPanel>& InGraphPanel, const TArray< TSharedRef<SGraphPin> >& InStartingPins) override
@@ -106,7 +107,7 @@ void SEdNode_DialogueNode::UpdateGraphNode()
 		.VAlign(VAlign_Center)
 		[
 			SNew(SBorder)
-			.BorderImage(FEditorStyle::GetBrush("Graph.StateNode.Body"))
+			.BorderImage(FAppStyle::GetBrush("Graph.StateNode.Body"))
 			.Padding(0.0f)
 			.BorderBackgroundColor(this, &SEdNode_DialogueNode::GetBorderBackgroundColor)
 			[
@@ -146,8 +147,9 @@ void SEdNode_DialogueNode::UpdateGraphNode()
 	// Create comment bubble
 	CreateCommentBubble();
 	
-	
 	CreatePinWidgets();
+
+	SetupErrorReporting();
 }
 
 
@@ -253,7 +255,7 @@ TSharedPtr<SCompoundWidget> SEdNode_DialogueNode::CreateNodeBody()
 	
 	//Create Body
 	SAssignNew(NodeBody, SBorder)
-	.BorderImage(FEditorStyle::GetBrush("Graph.StateNode.ColorSpill"))
+	.BorderImage(FAppStyle::GetBrush("Graph.StateNode.ColorSpill"))
 	.BorderBackgroundColor(TitleShadowColor)
 	.HAlign(HAlign_Center)
 	.VAlign(VAlign_Center)
@@ -293,7 +295,7 @@ TSharedPtr<SCompoundWidget> SEdNode_DialogueNode::CreateNodeBody()
 				.AutoHeight()
 				[
 					SAssignNew(InlineEditableText, SInlineEditableTextBlock)
-					.Style(FEditorStyle::Get(), "Graph.StateNode.NodeTitleInlineEditableText")
+					.Style(FAppStyle::Get(), "Graph.StateNode.NodeTitleInlineEditableText")
 					.Text(NodeTitle.Get(), &SNodeTitle::GetHeadTitle)
 					.OnVerifyTextChanged(this, &SEdNode_DialogueNode::OnVerifyNameTextChanged)
 					.OnTextCommitted(this, &SEdNode_DialogueNode::OnNameTextCommited)
@@ -320,10 +322,6 @@ TSharedPtr<SCompoundWidget> SEdNode_DialogueNode::CreateNodeBody()
 			]
 		]
 	];
-
-
-	ErrorReporting = ErrorText;
-	ErrorReporting->SetError(ErrorMsg);
 
 	return NodeBody;
 }
@@ -364,7 +362,7 @@ EVisibility SEdNode_DialogueNode::GetDragOverMarkerVisibility() const
 
 const FSlateBrush* SEdNode_DialogueNode::GetNameIcon() const
 {
-	return FEditorStyle::GetBrush(TEXT("BTEditor.Graph.BTNode.Icon"));
+	return FAppStyle::GetBrush(TEXT("BTEditor.Graph.BTNode.Icon"));
 }
 
 FText SEdNode_DialogueNode::GetDescription() const

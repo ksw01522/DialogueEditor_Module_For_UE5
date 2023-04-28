@@ -23,7 +23,7 @@ private:
 	UEdGraphNode_Dialogue_Basic* EdNode_Basic;
 
 protected:
-	TSharedPtr<STextBlock> DialogueStringTextBlock = nullptr;
+	TSharedPtr<class SRichTextBlock> DialogueStringTextBlock = nullptr;
 	TSharedPtr<STextBlock> OriginalDialogueStringTextBlock = nullptr;
 	TSharedPtr<SButton> DialogueImportBTN = nullptr;
 
@@ -35,7 +35,11 @@ private:
 	virtual EVisibility CanVisibleImportBTN() const;
 	virtual FReply ImportDialogue();
 
+	void SetDialogueStyle();
 
 protected:
 	virtual TSharedPtr<SCompoundWidget> CreateNodeBody() override;
+
+public:
+	void ChangeDialogueTextStyle(const TSharedPtr<class FSlateStyleSet>& NewStyleSet, TArray< TSharedRef< class ITextDecorator > >& NewDeco, const FTextBlockStyle& DefaultStyle);
 };

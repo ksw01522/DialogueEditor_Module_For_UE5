@@ -38,4 +38,7 @@ protected:
 	void Clear();
 
 	void SortNode(UDialogueNode* TargetNode);
+
+public:
+	void OnChangedDialogueTextStyle(const TSharedPtr<class FSlateStyleSet>& NewStyleSet, TArray< TSharedRef< class ITextDecorator > >& NewDeco, const FTextBlockStyle& DefaultStyle);
 };

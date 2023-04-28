@@ -13,7 +13,12 @@
 #include "GraphEditorSettings.h"
 #include "DialogueAssetEditor/DialogueDragConnection.h"
 #include "DialogueSession.h"
-#include "EditorStyleSet.h"
+#include "Styling/AppStyle.h"
+#include "Widgets/Text/SRichTextBlock.h"
+#include "Components/RichTextBlockDecorator.h"
+#include "Styling/SlateStyle.h"
+
+
 
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 
@@ -93,18 +98,23 @@ FReply SEdNode_Dialogue_Basic::ImportDialogue()
 	return FReply::Handled();
 }
 
+void SEdNode_Dialogue_Basic::SetDialogueStyle()
+{
+	if(DialogueStringTextBlock == nullptr) return;
+
+	//DialogueStringTextBlock->SetTextStyle()
+}
+
 TSharedPtr<SCompoundWidget> SEdNode_Dialogue_Basic::CreateNodeBody()
 {
 	TSharedPtr<SBorder> NodeBody;
 
 	FLinearColor TitleShadowColor(0.6f, 0.6f, 0.6f);
-	TSharedPtr<SErrorText> ErrorText;
 	const FSlateBrush* NodeTypeIcon = GetNameIcon();
 	TSharedPtr<SNodeTitle> NodeTitle = SNew(SNodeTitle, EdNode);
-
 	//Create Body
 	SAssignNew(NodeBody, SBorder)
-		.BorderImage(FEditorStyle::GetBrush("Graph.StateNode.ColorSpill"))
+		.BorderImage(FAppStyle::GetBrush("Graph.StateNode.ColorSpill"))
 		.BorderBackgroundColor(TitleShadowColor)
 		.HAlign(HAlign_Center)
 		.VAlign(VAlign_Center)
@@ -124,7 +134,7 @@ TSharedPtr<SCompoundWidget> SEdNode_Dialogue_Basic::CreateNodeBody()
 					+ SHorizontalBox::Slot()
 					.AutoWidth()
 					[
-						SAssignNew(ErrorText, SErrorText)
+						SAssignNew(ErrorReporting, SErrorText)
 						.BackgroundColor(this, &SEdNode_Dialogue_Basic::GetErrorColor)
 						.ToolTipText(this, &SEdNode_Dialogue_Basic::GetErrorMsgToolTip)
 					]
@@ -139,7 +149,7 @@ TSharedPtr<SCompoundWidget> SEdNode_Dialogue_Basic::CreateNodeBody()
 						.AutoHeight()
 						[
 							SAssignNew(InlineEditableText, SInlineEditableTextBlock)
-							.Style(FEditorStyle::Get(), "Graph.StateNode.NodeTitleInlineEditableText")
+							.Style(FAppStyle::Get(), "Graph.StateNode.NodeTitleInlineEditableText")
 							.Text(NodeTitle.Get(), &SNodeTitle::GetHeadTitle)
 							.OnVerifyTextChanged(this, &SEdNode_Dialogue_Basic::OnVerifyNameTextChanged)
 							.OnTextCommitted(this, &SEdNode_DialogueNode::OnNameTextCommited)
@@ -172,7 +182,7 @@ TSharedPtr<SCompoundWidget> SEdNode_Dialogue_Basic::CreateNodeBody()
 				.VAlign(VAlign_Fill)
 				.AutoHeight()
 				[
-					SAssignNew(DialogueStringTextBlock, STextBlock)
+					SAssignNew(DialogueStringTextBlock, SRichTextBlock)
 					.Visibility(this, &SEdNode_Dialogue_Basic::CanVisibleDialogue)
 					.Text(this, &SEdNode_Dialogue_Basic::GetDialogueString)
 					.WrapTextAt(1000)
@@ -200,10 +210,22 @@ TSharedPtr<SCompoundWidget> SEdNode_Dialogue_Basic::CreateNodeBody()
 			]
 		];
 
-
-	ErrorReporting = ErrorText;
-	ErrorReporting->SetError(ErrorMsg);
-
 	return NodeBody;
 }
+
+
+
 END_SLATE_FUNCTION_BUILD_OPTIMIZATION
+
+void SEdNode_Dialogue_Basic::ChangeDialogueTextStyle(const TSharedPtr<FSlateStyleSet>& NewStyleSet, TArray< TSharedRef<ITextDecorator > >& NewDeco, const FTextBlockStyle& DefaultStyle)
+{
+	LOG_INFO(TEXT("Change Dialogue Text Style."));
+	if(DialogueStringTextBlock == nullptr) {
+		LOG_ERROR(TEXT("Can't find Dialouge String Block.")); 
+		return;
+	}
+
+	DialogueStringTextBlock->SetDecoratorStyleSet(NewStyleSet.Get());
+	DialogueStringTextBlock->SetDecorators(NewDeco);
+	DialogueStringTextBlock->SetTextStyle(DefaultStyle);
+}

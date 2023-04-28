@@ -27,6 +27,7 @@
 #include "AutoLayout/ForceDirectedLayoutStrategy.h"
 
 #include "DialogueEditor.h"
+#
 
 
 #define LOCTEXT_NAMESPACE "AssetEditor_Dialogue"
@@ -57,6 +58,7 @@ FAssetEditor_Dialogue::FAssetEditor_Dialogue()
 	EdGraphSchemaSubclass = UEdSchema_Dialogue::StaticClass();
 
 	DialogueEditorSettings = NewObject<UDialogueEditorSettings>(UDialogueEditorSettings::StaticClass());
+	DialogueEditorSettings->AssetEditor = this;
 
 #if ENGINE_MAJOR_VERSION < 5
 	OnPackageSavedDelegateHandle = UPackage::PackageSavedEvent.AddRaw(this, &FAssetEditor_Dialogue::OnPackageSaved);
@@ -826,6 +828,7 @@ void FAssetEditor_Dialogue::OnPackageSavedWithContext(const FString& PackageFile
 {
 	RebuildDialogue();
 }
+
 #endif // #else // #if ENGINE_MAJOR_VERSION < 5
 
 void FAssetEditor_Dialogue::RegisterToolbarTab(const TSharedRef<class FTabManager>& InTabManager)
@@ -833,6 +836,16 @@ void FAssetEditor_Dialogue::RegisterToolbarTab(const TSharedRef<class FTabManage
 	FAssetEditorToolkit::RegisterTabSpawners(InTabManager);
 }
 
+void FAssetEditor_Dialogue::OnChangedDialogueTextStyle()
+{
+	const TSharedPtr<class FSlateStyleSet>& DialogueStyleSet = DialogueEditorSettings->GetDialogueStyleSet();
 
+	TArray<TSharedRef<ITextDecorator>> Decos;
+	DialogueEditorSettings->GetDialogueTextDecoratorInstances(Decos);
+
+	const FTextBlockStyle& DefaultStyle = DialogueEditorSettings->GetDialougeDefaultTextStyle();
+
+	Cast<UEdGraph_DialogueSession>( ViewportWidget->GetCurrentGraph())->OnChangedDialogueTextStyle(DialogueStyleSet, Decos, DefaultStyle);
+}
 
 #undef LOCTEXT_NAMESPACE

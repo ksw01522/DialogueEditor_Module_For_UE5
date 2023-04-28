@@ -38,6 +38,8 @@ public class DialogueEditor : ModuleRules
 				"KismetWidgets",
 				"ApplicationCore",
 				"ToolMenus",
+				"UMG",
+                "RenderCore"
 				// ... add private dependencies that you statically link with here ...
 			}
 			);

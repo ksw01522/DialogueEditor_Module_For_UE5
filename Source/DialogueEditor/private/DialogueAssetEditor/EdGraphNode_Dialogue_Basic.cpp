@@ -4,6 +4,7 @@
 #include "DialogueAssetEditor/EdGraphNode_Dialogue_Basic.h"
 #include "Nodes/DialogueNode_Basic.h"
 #include "DialogueEditor.h"
+#include "DialogueAssetEditor/SEdNode_Dialogue_Basic.h"
 
 UDialogueNode_Basic* UEdGraphNode_Dialogue_Basic::GetDialogueBasicNode() const
 {
@@ -60,4 +61,16 @@ void UEdGraphNode_Dialogue_Basic::TryImportDialogueString()
 	else {
 		LOG_ERROR(TEXT("Can't Importy Dialogue String because can't find Node."));
 	}
+}
+
+void UEdGraphNode_Dialogue_Basic::ChangeDialogueTextStyle(const TSharedPtr<class FSlateStyleSet>& NewStyleSet, TArray<TSharedRef<class ITextDecorator>>& NewDeco, const FTextBlockStyle& DefaultStyle)
+{
+	SEdNode_Dialogue_Basic* SEdBasic = (SEdNode_Dialogue_Basic*)SEdNode;
+	if (SEdBasic == nullptr) {
+		LOG_ERROR(TEXT("Can't find SEdNode from UEdGraphNode_Dialogue_Baisic"));
+		return;
+	}
+	
+	SEdBasic->ChangeDialogueTextStyle(NewStyleSet, NewDeco, DefaultStyle);
+	
 }

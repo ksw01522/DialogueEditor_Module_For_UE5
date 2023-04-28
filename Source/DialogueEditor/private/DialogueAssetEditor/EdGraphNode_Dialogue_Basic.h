@@ -17,7 +17,6 @@ class UEdGraphNode_Dialogue_Basic : public UEdGraphNode_Dialogue
 	GENERATED_BODY()
 	
 
-
 public:
 	UDialogueNode_Basic* GetDialogueBasicNode() const;
 
@@ -28,4 +27,6 @@ public:
 	FString GetDialogueString_Original() const;
 
 	void TryImportDialogueString();
+
+	void ChangeDialogueTextStyle(const TSharedPtr<class FSlateStyleSet>& NewStyleSet, TArray< TSharedRef< class ITextDecorator > >& NewDeco, const FTextBlockStyle& DefaultStyle);
 };
