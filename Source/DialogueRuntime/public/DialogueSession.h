@@ -44,6 +44,14 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Dialogue")
 	bool bEdgeEnabled;
 
+private:
+	UPROPERTY(EditAnywhere, Category = "DialogueTextStyle", meta = (RequiredAssetDataTags = "RowStructure=/Script/UMG.RichTextStyleRow"))
+	UDataTable* DialogueTextStyleSet;
+
+	UPROPERTY(EditAnywhere, Category = "DialogueTextStyle")
+	TArray<TSubclassOf<URichTextBlockDecorator>> DecoratorClasses;
+
+public:
 #if WITH_EDITOR
 	//UFUNCTION(BlueprintCallable, Category = "Dialogue")
 	//virtual void Print(bool ToConsole = true, bool ToScreen = true);
@@ -82,8 +90,14 @@ public:
 #endif
 
 public:
-	UFUNCTION(BlueprintCallable, Category = "Dialogue")
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Dialogue")
 	UDialogueNode_Start* GetStartNode() const;
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Dialogue")
+	UDataTable* GetDialogueTextStyleSet() const {return DialogueTextStyleSet;}
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Dialogue")
+	TArray<TSubclassOf<class URichTextBlockDecorator>> GetDialogueDecoClasses() const {return DecoratorClasses;}
 
 #if WITH_EDITOR
 	

@@ -450,7 +450,7 @@ void UEdSchema_Dialogue::GetGraphContextActions(FGraphContextMenuBuilder& Contex
 			
 			TSubclassOf<UEdGraphNode_Dialogue> EdNodeType = GetEdDialogueNodeSubclass(NodeType.GetDefaultObject()->GetDialogueNodeType());
 			ChildNewNodeAction->NodeTemplate = NewObject<UEdGraphNode_Dialogue>(ContextMenuBuilder.OwnerOfTemporaries, EdNodeType);
-			ChildNewNodeAction->NodeTemplate->DialogueNode = NewObject<UDialogueNode>(ChildNewNodeAction->NodeTemplate, NodeType);
+			ChildNewNodeAction->NodeTemplate->SetDialogueNode(NewObject<UDialogueNode>(ChildNewNodeAction->NodeTemplate, NodeType));
 			ChildNewNodeAction->NodeTemplate->DialogueNode->DialogueSession = DialogueSession;
 			ContextMenuBuilder.AddAction(ChildNewNodeAction);
 
@@ -468,7 +468,7 @@ void UEdSchema_Dialogue::CreateStartNode(UEdGraph& Graph) const
 
 	TSharedPtr<FEdSchemaAction_Dialogue_NewNode> NewNodeAction(new FEdSchemaAction_Dialogue_NewNode(GetNodeCategoryName(), FText(), FText(), 0));
 	NewNodeAction->NodeTemplate = NewObject<UEdGraphNode_Dialogue_Start>(&Graph);
-	NewNodeAction->NodeTemplate->DialogueNode = NewObject<UDialogueNode>(NewNodeAction->NodeTemplate, UDialogueNode_Start::StaticClass());
+	NewNodeAction->NodeTemplate->SetDialogueNode(NewObject<UDialogueNode>(NewNodeAction->NodeTemplate, UDialogueNode_Start::StaticClass() ) );
 	NewNodeAction->NodeTemplate->DialogueNode->DialogueSession = DialogueSession;
 	UDialogueNode_Start* StartNode = Cast<UDialogueNode_Start>(NewNodeAction->NodeTemplate->DialogueNode);
 	if(IsValid(StartNode))	{ StartNode->DialogueSession = DialogueSession; }

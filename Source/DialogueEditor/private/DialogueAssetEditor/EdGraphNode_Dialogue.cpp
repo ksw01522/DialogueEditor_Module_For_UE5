@@ -7,6 +7,8 @@
 #include "Kismet2/BlueprintEditorUtils.h"
 #include "EdGraphNode_Dialogue.h"
 #include "DialogueNode.h"
+#include "Settings_DialogueEditor.h"
+#include "SEdNode_DialogueNode.h"
 
 UEdGraphNode_Dialogue::UEdGraphNode_Dialogue()
 {
@@ -81,7 +83,6 @@ void UEdGraphNode_Dialogue::SetDialogueNode(UDialogueNode* InNode)
 	DialogueNode = InNode;
 }
 
-#if WITH_EDITOR
 
 void UEdGraphNode_Dialogue::PostEditUndo()
 {
@@ -95,4 +96,3 @@ FText UEdGraphNode_Dialogue::GetNodeDescription()
 
 
 
-#endif

@@ -15,10 +15,14 @@ UCLASS()
 class UEdGraphNode_Dialogue_Basic : public UEdGraphNode_Dialogue
 {
 	GENERATED_BODY()
-	
 
 public:
+	class SEdNode_Dialogue_Basic* SEdNode_Basic;
+
 	UDialogueNode_Basic* GetDialogueBasicNode() const;
+
+	UDataTable* GetDialogueTextStyleSet() const;
+	void GetDecoClasses(TArray<TSubclassOf<class URichTextBlockDecorator>>& OutDecoClasses) const;
 
 	FString GetDialoguerName() const;
 	FString GetDialoguerName_Original() const;
@@ -26,7 +30,10 @@ public:
 	FString GetDialogueString() const;
 	FString GetDialogueString_Original() const;
 
-	void TryImportDialogueString();
+	void TryImportDialogueString() const;
 
-	void ChangeDialogueTextStyle(const TSharedPtr<class FSlateStyleSet>& NewStyleSet, TArray< TSharedRef< class ITextDecorator > >& NewDeco, const FTextBlockStyle& DefaultStyle);
+	UFUNCTION()
+	void OnChangedDialogueStyleFunction();
+
+	virtual void SetDialogueNode(UDialogueNode* NewNode) override;
 };

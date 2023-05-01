@@ -46,10 +46,18 @@ UDialogueNode_Start* UDialogueSession::GetStartNode() const
 
 
 
+
+
 #if WITH_EDITOR
 void UDialogueSession::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
 	if (PropertyChangedEvent.GetPropertyName() == "PreviewLanguage") { OnChaged_PreviewLanguage(); }
+	else if (PropertyChangedEvent.GetPropertyName() == "DialogueTextStyleSet" || PropertyChangedEvent.GetPropertyName() == "DecoratorClasses") {
+		for (auto Node : AllNodes)
+		{
+			Cast<UDialogueNode>(Node)->OnChangedDialogueTextStyle();
+		}
+	}
 
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 }

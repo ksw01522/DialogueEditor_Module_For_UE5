@@ -28,7 +28,7 @@ public:
 	UPROPERTY(VisibleAnywhere, Instanced, Category = "DialogueSession")
 	UDialogueNode* DialogueNode;
 
-	void SetDialogueNode(UDialogueNode* InNode);
+	virtual void SetDialogueNode(UDialogueNode* InNode);
 	UEdGraph_DialogueSession* GetDialogueEdGraph();
 
 	SEdNode_DialogueNode* SEdNode;
@@ -43,10 +43,10 @@ public:
 	virtual UEdGraphPin* GetInputPin() const;
 	virtual UEdGraphPin* GetOutputPin() const;
 
-#if WITH_EDITOR
 	virtual void PostEditUndo() override;
 
 	FText GetNodeDescription();
 
-#endif
+
+
 };

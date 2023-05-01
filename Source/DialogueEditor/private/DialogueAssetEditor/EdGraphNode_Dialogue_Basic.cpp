@@ -5,10 +5,25 @@
 #include "Nodes/DialogueNode_Basic.h"
 #include "DialogueEditor.h"
 #include "DialogueAssetEditor/SEdNode_Dialogue_Basic.h"
+#include "Components/RichTextBlockDecorator.h"
 
 UDialogueNode_Basic* UEdGraphNode_Dialogue_Basic::GetDialogueBasicNode() const
 {
-	return Cast<UDialogueNode_Basic>(DialogueNode);
+	UDialogueNode_Basic* BasicNode = Cast<UDialogueNode_Basic>(DialogueNode);
+	ensure(BasicNode != nullptr);
+	return BasicNode;
+}
+
+UDataTable* UEdGraphNode_Dialogue_Basic::GetDialogueTextStyleSet() const
+{
+	UDialogueNode_Basic* BasicNode = GetDialogueBasicNode();
+
+	return BasicNode->GetDialogueTextStyleSet();
+}
+
+void UEdGraphNode_Dialogue_Basic::GetDecoClasses(TArray<TSubclassOf<URichTextBlockDecorator>>& OutDecoClasses) const
+{
+	OutDecoClasses = GetDialogueBasicNode()->GetDecoClasses();
 }
 
 FString UEdGraphNode_Dialogue_Basic::GetDialoguerName() const
@@ -51,7 +66,7 @@ FString UEdGraphNode_Dialogue_Basic::GetDialogueString_Original() const
 	return ReturnString;
 }
 
-void UEdGraphNode_Dialogue_Basic::TryImportDialogueString()
+void UEdGraphNode_Dialogue_Basic::TryImportDialogueString() const
 {
 	UDialogueNode_Basic* Node = GetDialogueBasicNode();
 	if (Node)
@@ -63,14 +78,16 @@ void UEdGraphNode_Dialogue_Basic::TryImportDialogueString()
 	}
 }
 
-void UEdGraphNode_Dialogue_Basic::ChangeDialogueTextStyle(const TSharedPtr<class FSlateStyleSet>& NewStyleSet, TArray<TSharedRef<class ITextDecorator>>& NewDeco, const FTextBlockStyle& DefaultStyle)
+void UEdGraphNode_Dialogue_Basic::OnChangedDialogueStyleFunction()
 {
-	SEdNode_Dialogue_Basic* SEdBasic = (SEdNode_Dialogue_Basic*)SEdNode;
-	if (SEdBasic == nullptr) {
-		LOG_ERROR(TEXT("Can't find SEdNode from UEdGraphNode_Dialogue_Baisic"));
-		return;
-	}
-	
-	SEdBasic->ChangeDialogueTextStyle(NewStyleSet, NewDeco, DefaultStyle);
-	
+	ensure(SEdNode_Basic != nullptr);
+
+	SEdNode_Basic->UpdateRichTextStyle();
 }
+
+void UEdGraphNode_Dialogue_Basic::SetDialogueNode(UDialogueNode* NewNode)
+{
+	DialogueNode = NewNode;
+	Cast<UDialogueNode_Basic>(DialogueNode)->OnChangedDialogueStyle.BindDynamic(this, &UEdGraphNode_Dialogue_Basic::OnChangedDialogueStyleFunction);
+}
+

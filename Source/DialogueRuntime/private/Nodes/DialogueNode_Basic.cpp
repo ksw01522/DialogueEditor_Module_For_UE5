@@ -17,8 +17,20 @@ UDialogueNode_Basic::UDialogueNode_Basic()
 	ChildrenLimitType = ECustomNodeLimit::Limited;
 	ChildrenLimit = 1;
 #endif
-
+	DialogueTextStyleSet = nullptr;
 	DialogueNodeType = EDialogueNodeType::Basic;
+}
+
+UDataTable* UDialogueNode_Basic::GetDialogueTextStyleSet() const
+{
+	if (DialogueTextStyleSet != nullptr)		{ return DialogueTextStyleSet; }
+	else										{ return DialogueSession->GetDialogueTextStyleSet(); }
+}
+
+TArray<TSubclassOf<class URichTextBlockDecorator>> UDialogueNode_Basic::GetDecoClasses() const
+{
+	if (DialogueDecoratorClasses.IsEmpty())		{ return GetDialogueSession()->GetDialogueDecoClasses();} 
+	else										{ return DialogueDecoratorClasses;}
 }
 
 FString UDialogueNode_Basic::GetDialoguerName(EDialogueLanguage Language)
@@ -113,6 +125,7 @@ void UDialogueNode_Basic::PostEditChangeProperty(FPropertyChangedEvent& Property
 {
 	if		(PropertyChangedEvent.GetPropertyName() == "DialoguerNameCode")		{ OnChanged_DialoguerNameCode(); }
 	else if (PropertyChangedEvent.GetPropertyName() == "DialogueStringCode")	{ OnChanged_DialogueStringCode(); }
+	else if (PropertyChangedEvent.GetPropertyName() == "DialogueTextStyleSet" || PropertyChangedEvent.GetPropertyName() == "DialogueDecoratorClasses") { OnChangedDialogueTextStyle(); }
 
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 }
@@ -295,6 +308,10 @@ void UDialogueNode_Basic::OnChanged_PreviewLanguage()
 
 	OnChanged_DialoguerNameCode();
 	OnChanged_DialogueStringCode();
+}
+void UDialogueNode_Basic::OnChangedDialogueTextStyle()
+{
+	OnChangedDialogueStyle.ExecuteIfBound();
 }
 #endif
 

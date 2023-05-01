@@ -77,6 +77,10 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DialogueNode")
 	FText GetDescription() const;
 	virtual FText GetDescription_Implementation() const;
+
+
+	virtual void OnChangedDialogueTextStyle() {}
+
 #endif
 
 #if WITH_EDITORONLY_DATA

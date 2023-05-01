@@ -58,7 +58,6 @@ public:
 
 	UDialogueEditorSettings* GetSettings() const;
 
-	void UpdateDialogueStyle();
 
 protected:
 	TSharedRef<SDockTab> SpawnTab_Viewport(const FSpawnTabArgs& Args);
@@ -143,6 +142,4 @@ protected:
 	TSubclassOf<class UEdGraph_DialogueSession> EdGraphSubclass;
 	TSubclassOf<class UEdSchema_Dialogue> EdGraphSchemaSubclass;
 
-public:
-	void OnChangedDialogueTextStyle();
 };

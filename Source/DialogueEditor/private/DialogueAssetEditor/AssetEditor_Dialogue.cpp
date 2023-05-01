@@ -277,7 +277,7 @@ TSharedRef<SDockTab> FAssetEditor_Dialogue::SpawnTab_EditorSettings(const FSpawn
 #if ENGINE_MAJOR_VERSION < 5
 		.Icon(FEditorStyle::GetBrush("LevelEditor.Tabs.Details"))
 #endif // #if ENGINE_MAJOR_VERSION < 5
-		.Label(LOCTEXT("EditorSettings_Title", "Custom Graph Editor Setttings"))
+		.Label(LOCTEXT("EditorSettings_Title", "Dialogue Editor Setttings"))
 		[
 			EditorSettingsWidget.ToSharedRef()
 		];
@@ -285,7 +285,7 @@ TSharedRef<SDockTab> FAssetEditor_Dialogue::SpawnTab_EditorSettings(const FSpawn
 
 FText FAssetEditor_Dialogue::GetCornerText()
 {
-	return LOCTEXT("AppearanceCornerText_Dialogue", "Custom Graph");
+	return LOCTEXT("AppearanceCornerText_Dialogue", "Dialogue Session");
 }
 
 void FAssetEditor_Dialogue::CreateInternalWidgets()
@@ -829,23 +829,12 @@ void FAssetEditor_Dialogue::OnPackageSavedWithContext(const FString& PackageFile
 	RebuildDialogue();
 }
 
+
 #endif // #else // #if ENGINE_MAJOR_VERSION < 5
 
 void FAssetEditor_Dialogue::RegisterToolbarTab(const TSharedRef<class FTabManager>& InTabManager)
 {
 	FAssetEditorToolkit::RegisterTabSpawners(InTabManager);
-}
-
-void FAssetEditor_Dialogue::OnChangedDialogueTextStyle()
-{
-	const TSharedPtr<class FSlateStyleSet>& DialogueStyleSet = DialogueEditorSettings->GetDialogueStyleSet();
-
-	TArray<TSharedRef<ITextDecorator>> Decos;
-	DialogueEditorSettings->GetDialogueTextDecoratorInstances(Decos);
-
-	const FTextBlockStyle& DefaultStyle = DialogueEditorSettings->GetDialougeDefaultTextStyle();
-
-	Cast<UEdGraph_DialogueSession>( ViewportWidget->GetCurrentGraph())->OnChangedDialogueTextStyle(DialogueStyleSet, Decos, DefaultStyle);
 }
 
 #undef LOCTEXT_NAMESPACE

@@ -109,7 +109,7 @@ void FDialogueDragConnection::HoverTargetChanged()
 	if (UniqueMessages.Num() == 0)
 	{
 		SetSimpleFeedbackMessage(
-			FEditorStyle::GetBrush(TEXT("Graph.ConnectorFeedback.NewNode")),
+			FAppStyle::GetBrush(TEXT("Graph.ConnectorFeedback.NewNode")),
 			FLinearColor::White,
 			NSLOCTEXT("GraphEditor.Feedback", "PlaceNewNode", "Place a new node.")
 			);
@@ -128,16 +128,16 @@ void FDialogueDragConnection::HoverTargetChanged()
 			case CONNECT_RESPONSE_BREAK_OTHERS_A:
 			case CONNECT_RESPONSE_BREAK_OTHERS_B:
 			case CONNECT_RESPONSE_BREAK_OTHERS_AB:
-				StatusSymbol = FEditorStyle::GetBrush(TEXT("Graph.ConnectorFeedback.OK"));
+				StatusSymbol = FAppStyle::GetBrush(TEXT("Graph.ConnectorFeedback.OK"));
 				break;
 
 			case CONNECT_RESPONSE_MAKE_WITH_CONVERSION_NODE:
-				StatusSymbol = FEditorStyle::GetBrush(TEXT("Graph.ConnectorFeedback.ViaCast"));
+				StatusSymbol = FAppStyle::GetBrush(TEXT("Graph.ConnectorFeedback.ViaCast"));
 				break;
 
 			case CONNECT_RESPONSE_DISALLOW:
 			default:
-				StatusSymbol = FEditorStyle::GetBrush(TEXT("Graph.ConnectorFeedback.Error"));
+				StatusSymbol = FAppStyle::GetBrush(TEXT("Graph.ConnectorFeedback.Error"));
 				break;
 			}
 

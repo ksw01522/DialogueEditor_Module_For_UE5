@@ -35,11 +35,27 @@ private:
 	virtual EVisibility CanVisibleImportBTN() const;
 	virtual FReply ImportDialogue();
 
-	void SetDialogueStyle();
 
+//////////////////////////// Rich Text Block /////////////////////////////
+	UPROPERTY(Transient)
+	TObjectPtr<class URichTextBlock> RichTextBlock = nullptr;
+
+	UPROPERTY(Transient)
+	TArray<TObjectPtr<class URichTextBlockDecorator>> InstanceDecorators;
+	TSharedPtr<class FSlateStyleSet> StyleInstance;
+	UPROPERTY(Transient)
+	FTextBlockStyle DialogueDefaultTextStyle;
+
+	void GetDecoClasses(TArray<TSubclassOf<URichTextBlockDecorator>>& OutDecoClasses) const;
+
+	void MakeStyleInstance();
+	void MakeDecoInstance(TArray< TSharedRef<class ITextDecorator > >& OutDecorators);
+
+/////////////////////////////////////////////////////////////////////////
 protected:
 	virtual TSharedPtr<SCompoundWidget> CreateNodeBody() override;
 
 public:
-	void ChangeDialogueTextStyle(const TSharedPtr<class FSlateStyleSet>& NewStyleSet, TArray< TSharedRef< class ITextDecorator > >& NewDeco, const FTextBlockStyle& DefaultStyle);
+	void UpdateRichTextStyle();
+
 };

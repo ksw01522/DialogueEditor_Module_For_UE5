@@ -29,8 +29,8 @@ public class DialogueRuntime : ModuleRules
 				"Slate",
 				"SlateCore",
 				"GameplayTags",
-            }
-			);
-
+				"UMG",
+                "RenderCore"
+            });
 	}
 }

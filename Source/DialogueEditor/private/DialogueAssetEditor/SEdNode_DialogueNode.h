@@ -54,6 +54,8 @@ public:
 
 	virtual FText GetDescription() const;
 
+	virtual void OnChangedEditorSetting(const class UDialogueEditorSettings* EditorSetting) {}
+
 protected:
 	TSharedPtr<class SCommentBubble> CreateCommentBubble();
 	virtual TSharedPtr<SCompoundWidget> CreateNodeBody();

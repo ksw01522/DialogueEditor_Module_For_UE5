@@ -8,6 +8,7 @@
 #include "DialogueAssetEditor/EdGraphNode_DialogueEdge.h"
 #include "DialogueNode.h"
 #include "DialogueAssetEditor/EdGraphNode_Dialogue_Basic.h"
+#include "Settings_DialogueEditor.h"
 
 UEdGraph_DialogueSession::UEdGraph_DialogueSession()
 {
@@ -130,6 +131,11 @@ bool UEdGraph_DialogueSession::Modify(bool bAlwaysMarkDirty /*= true*/)
 	return FinalValue;
 }
 
+void UEdGraph_DialogueSession::PostLoad()
+{
+	Super::PostLoad();
+}
+
 void UEdGraph_DialogueSession::Clear()
 {
 	UDialogueSession* GraphSession = GetDialogueSession();
@@ -168,19 +174,7 @@ void UEdGraph_DialogueSession::SortNode(UDialogueNode* TargetNode)
 	Node->ParentNodes.Sort(Comp);
 }
 
-void UEdGraph_DialogueSession::OnChangedDialogueTextStyle(const TSharedPtr<class FSlateStyleSet>& NewStyleSet, TArray<TSharedRef<class ITextDecorator>>& NewDeco, const FTextBlockStyle& DefaultStyle)
-{
-	for (auto Node : Nodes) {
-		LOG_WARNING(TEXT("1234"));
 
-		UEdGraphNode_Dialogue_Basic* EdBasicNode = Cast<UEdGraphNode_Dialogue_Basic>(Node);
-		if(EdBasicNode == nullptr) continue;
-
-		EdBasicNode->ChangeDialogueTextStyle(NewStyleSet, NewDeco, DefaultStyle);
-		LOG_WARNING(TEXT("5678"));
-
-	}
-}
 
 void UEdGraph_DialogueSession::PostEditUndo()
 {

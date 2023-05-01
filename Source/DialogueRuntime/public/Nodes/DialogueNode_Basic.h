@@ -15,6 +15,9 @@ class DIALOGUERUNTIME_API UDialogueNode_Basic : public UDialogueNode
 {
 	GENERATED_BODY()
 
+#if WITH_EDITOR
+	DECLARE_DYNAMIC_DELEGATE(FOnChangedDialogueStyle);
+#endif
 
 
 protected:
@@ -22,6 +25,8 @@ protected:
 	FDialogueLocalization Dialogue_Name;
 	UPROPERTY()
 	FDialogueLocalization Dialogue_String;
+
+
 
 #if WITH_EDITORONLY_DATA
 
@@ -48,13 +53,29 @@ protected:
 
 	UPROPERTY(EditInstanceOnly, Category = "Dialogue", BlueprintGetter = GetDialogueString_InEditor, meta = (DisplayAfter = "DialogueStringCode", EditCondition = "CanVisible_DialogueString", EditConditionHides))
 	FString DialogueString;
+
+	
 #endif
 
+	UPROPERTY(EditAnywhere, Category = "DialogueTextStyle", meta = (RequiredAssetDataTags = "RowStructure=/Script/UMG.RichTextStyleRow"))
+	UDataTable* DialogueTextStyleSet;
+
+	UPROPERTY(EditAnywhere, Category = "DialogueTextStyle")
+	TArray<TSubclassOf<class URichTextBlockDecorator>> DialogueDecoratorClasses;
+
+public:
+#if WITH_EDITORONLY_DATA
+	UPROPERTY()
+	FOnChangedDialogueStyle OnChangedDialogueStyle;
+#endif
 
 
 public:
 	UDialogueNode_Basic();
-	
+
+	UDataTable* GetDialogueTextStyleSet() const;
+	TArray<TSubclassOf<class URichTextBlockDecorator>> GetDecoClasses() const;
+
 	FString GetDialoguerName(EDialogueLanguage Language);
 	FString GetDialogueString(EDialogueLanguage Language);
 
@@ -94,6 +115,8 @@ private:
 	virtual void OnChanged_DialogueStringCode();
 
 	virtual void OnChanged_PreviewLanguage() override;
+
+	virtual void OnChangedDialogueTextStyle() override;
 
 #endif
 	

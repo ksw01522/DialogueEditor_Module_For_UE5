@@ -17,8 +17,27 @@
 #include "Widgets/Text/SRichTextBlock.h"
 #include "Components/RichTextBlockDecorator.h"
 #include "Styling/SlateStyle.h"
+#include "Settings_DialogueEditor.h"
+#include "Components/RichTextBlock.h"
+#include "RenderingThread.h"
 
+template< class ObjectType >
+struct FDialogueDeferredDeletor : public FDeferredCleanupInterface
+{
+public:
+	FDialogueDeferredDeletor(ObjectType* InInnerObjectToDelete)
+		: InnerObjectToDelete(InInnerObjectToDelete)
+	{
+	}
 
+	virtual ~FDialogueDeferredDeletor()
+	{
+		delete InnerObjectToDelete;
+	}
+
+private:
+	ObjectType* InnerObjectToDelete;
+};
 
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 
@@ -26,9 +45,13 @@ void SEdNode_Dialogue_Basic::Construct(const FArguments& InArgs, UEdGraphNode_Di
 {
 	EdNode = InNode;
 	GraphNode = InNode;
-	UpdateGraphNode();
 	InNode->SEdNode = this;
+	InNode->SEdNode_Basic = this;
 	EdNode_Basic = InNode;
+	RichTextBlock = NewObject<URichTextBlock>(EdNode_Basic, FName(TEXT("RichTextBlock")));
+
+	UpdateGraphNode();
+	UpdateRichTextStyle();
 }
 
 FText SEdNode_Dialogue_Basic::GetDialogueString() const
@@ -98,12 +121,91 @@ FReply SEdNode_Dialogue_Basic::ImportDialogue()
 	return FReply::Handled();
 }
 
-void SEdNode_Dialogue_Basic::SetDialogueStyle()
-{
-	if(DialogueStringTextBlock == nullptr) return;
 
-	//DialogueStringTextBlock->SetTextStyle()
+
+//////////////////////////// Rich Text Block /////////////////////////////
+template< class ObjectType >
+FORCEINLINE TSharedPtr< ObjectType > MakeDialogueShareableDeferredCleanup(ObjectType* InObject)
+{
+	return MakeShareable(InObject, [](ObjectType* ObjectToDelete) { BeginCleanup(new FDialogueDeferredDeletor<ObjectType>(ObjectToDelete)); });
 }
+
+void SEdNode_Dialogue_Basic::GetDecoClasses(TArray<TSubclassOf<URichTextBlockDecorator>>& OutDecoClasses) const
+{
+	EdNode_Basic->GetDecoClasses(OutDecoClasses);
+}
+
+void SEdNode_Dialogue_Basic::MakeStyleInstance()
+{
+	StyleInstance.Reset();
+	StyleInstance = MakeDialogueShareableDeferredCleanup(new FSlateStyleSet(TEXT("RichTextStyle")));
+	
+	UDataTable* DialogueTextStyleSet = EdNode_Basic->GetDialogueTextStyleSet();
+
+
+	if (DialogueTextStyleSet && DialogueTextStyleSet->GetRowStruct()->IsChildOf(FRichTextStyleRow::StaticStruct()))
+	{
+		for (const auto& Entry : DialogueTextStyleSet->GetRowMap())
+		{
+			FName SubStyleName = Entry.Key;
+			FRichTextStyleRow* RichTextStyle = (FRichTextStyleRow*)Entry.Value;
+
+			if (SubStyleName == FName(TEXT("Default")))
+			{
+				DialogueDefaultTextStyle = RichTextStyle->TextStyle;
+			}
+
+			StyleInstance->Set(SubStyleName, RichTextStyle->TextStyle);
+		}
+	}
+}
+
+void SEdNode_Dialogue_Basic::MakeDecoInstance(TArray<TSharedRef<ITextDecorator>>& OutDecorators)
+{
+	TArray<TSubclassOf<URichTextBlockDecorator>> DecoratorClasses;
+	GetDecoClasses(DecoratorClasses);
+
+	for (TSubclassOf<URichTextBlockDecorator> DecoratorClass : DecoratorClasses)
+	{
+		if (UClass* ResolvedClass = DecoratorClass.Get())
+		{
+			if (!ResolvedClass->HasAnyClassFlags(CLASS_Abstract))
+			{
+				URichTextBlockDecorator* Decorator = NewObject<URichTextBlockDecorator>(RichTextBlock, ResolvedClass);
+				InstanceDecorators.Add(Decorator);
+			}
+		}
+	}
+
+	for (URichTextBlockDecorator* Decorator : InstanceDecorators)
+	{
+		if (Decorator)
+		{
+			TSharedPtr<ITextDecorator> TextDecorator = Decorator->CreateDecorator(RichTextBlock);
+			if (TextDecorator.IsValid())
+			{
+				OutDecorators.Add(TextDecorator.ToSharedRef());
+			}
+		}
+	}
+}
+
+void SEdNode_Dialogue_Basic::UpdateRichTextStyle()
+{
+	ensure(DialogueStringTextBlock.IsValid());
+
+	MakeStyleInstance();
+	TArray<TSharedRef<ITextDecorator>> Decorators;
+	MakeDecoInstance(Decorators);
+
+	DialogueStringTextBlock->SetDecoratorStyleSet(StyleInstance.Get());
+	DialogueStringTextBlock->SetDecorators(Decorators);
+	DialogueStringTextBlock->SetTextStyle(DialogueDefaultTextStyle);
+}
+
+
+/////////////////////////////////////////////////////////////////////////
+
 
 TSharedPtr<SCompoundWidget> SEdNode_Dialogue_Basic::CreateNodeBody()
 {
@@ -217,15 +319,4 @@ TSharedPtr<SCompoundWidget> SEdNode_Dialogue_Basic::CreateNodeBody()
 
 END_SLATE_FUNCTION_BUILD_OPTIMIZATION
 
-void SEdNode_Dialogue_Basic::ChangeDialogueTextStyle(const TSharedPtr<FSlateStyleSet>& NewStyleSet, TArray< TSharedRef<ITextDecorator > >& NewDeco, const FTextBlockStyle& DefaultStyle)
-{
-	LOG_INFO(TEXT("Change Dialogue Text Style."));
-	if(DialogueStringTextBlock == nullptr) {
-		LOG_ERROR(TEXT("Can't find Dialouge String Block.")); 
-		return;
-	}
 
-	DialogueStringTextBlock->SetDecoratorStyleSet(NewStyleSet.Get());
-	DialogueStringTextBlock->SetDecorators(NewDeco);
-	DialogueStringTextBlock->SetTextStyle(DefaultStyle);
-}
