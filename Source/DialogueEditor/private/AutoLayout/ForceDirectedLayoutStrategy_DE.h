@@ -1,16 +1,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AutoLayoutStrategy.h"
-#include "ForceDirectedLayoutStrategy.generated.h"
+#include "AutoLayoutStrategy_DE.h"
+#include "ForceDirectedLayoutStrategy_DE.generated.h"
 
 UCLASS()
-class UForceDirectedLayoutStrategy : public UAutoLayoutStrategy
+class UForceDirectedLayoutStrategy_DE : public UAutoLayoutStrategy_DE
 {
 	GENERATED_BODY()
 public:
-	UForceDirectedLayoutStrategy();
-	virtual ~UForceDirectedLayoutStrategy();
+	UForceDirectedLayoutStrategy_DE();
+	virtual ~UForceDirectedLayoutStrategy_DE();
 
 	virtual void Layout(UEdGraph* EdGraph) override;
 

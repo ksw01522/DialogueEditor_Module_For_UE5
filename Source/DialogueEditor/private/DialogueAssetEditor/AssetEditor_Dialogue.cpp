@@ -726,14 +726,14 @@ void FAssetEditor_Dialogue::AutoArrange()
 
 	EdGraph->Modify();
 
-	UAutoLayoutStrategy* LayoutStrategy = nullptr;
+	UAutoLayoutStrategy_DE* LayoutStrategy = nullptr;
 	switch (DialogueEditorSettings->AutoLayoutStrategy)
 	{
 	case EAutoLayoutStrategy::Tree:
-		LayoutStrategy = NewObject<UAutoLayoutStrategy>(EdGraph, UTreeLayoutStrategy::StaticClass());
+		LayoutStrategy = NewObject<UAutoLayoutStrategy_DE>(EdGraph, UTreeLayoutStrategy_DE::StaticClass());
 		break;
 	case EAutoLayoutStrategy::ForceDirected:
-		LayoutStrategy = NewObject<UAutoLayoutStrategy>(EdGraph, UForceDirectedLayoutStrategy::StaticClass());
+		LayoutStrategy = NewObject<UAutoLayoutStrategy_DE>(EdGraph, UForceDirectedLayoutStrategy_DE::StaticClass());
 		break;
 	default:
 		break;

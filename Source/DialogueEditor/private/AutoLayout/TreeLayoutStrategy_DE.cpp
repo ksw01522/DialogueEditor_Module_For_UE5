@@ -1,18 +1,18 @@
-#include "AutoLayout/TreeLayoutStrategy.h"
+#include "AutoLayout/TreeLayoutStrategy_DE.h"
 #include "DialogueEditor.h"
 #include "DialogueHeaders.h"
 #include "DialogueAssetEditor/SEdNode_DialogueNode.h"
 
-UTreeLayoutStrategy::UTreeLayoutStrategy()
+UTreeLayoutStrategy_DE::UTreeLayoutStrategy_DE()
 {
 }
 
-UTreeLayoutStrategy::~UTreeLayoutStrategy()
+UTreeLayoutStrategy_DE::~UTreeLayoutStrategy_DE()
 {
 
 }
 
-void UTreeLayoutStrategy::Layout(UEdGraph* _EdGraph)
+void UTreeLayoutStrategy_DE::Layout(UEdGraph* _EdGraph)
 {
 	EdGraph = Cast<UEdGraph_DialogueSession>(_EdGraph);
 	check(EdGraph != nullptr);
@@ -48,7 +48,7 @@ void UTreeLayoutStrategy::Layout(UEdGraph* _EdGraph)
 	}
 }
 
-void UTreeLayoutStrategy::InitPass(UDialogueNode* RootNode, const FVector2D& Anchor)
+void UTreeLayoutStrategy_DE::InitPass(UDialogueNode* RootNode, const FVector2D& Anchor)
 {
 	UEdGraphNode_Dialogue* EdNode_RootNode = EdGraph->NodeMap[RootNode];
 
@@ -80,7 +80,7 @@ void UTreeLayoutStrategy::InitPass(UDialogueNode* RootNode, const FVector2D& Anc
 	}
 }
 
-bool UTreeLayoutStrategy::ResolveConflictPass(UDialogueNode* Node)
+bool UTreeLayoutStrategy_DE::ResolveConflictPass(UDialogueNode* Node)
 {
 	bool HasConflict = false;
 	for (int32 i = 0; i < Node->ChildrenNodes.Num(); ++i)
@@ -110,7 +110,7 @@ bool UTreeLayoutStrategy::ResolveConflictPass(UDialogueNode* Node)
 	return HasConflict;
 }
 
-bool UTreeLayoutStrategy::ResolveConflict(UDialogueNode* LRoot, UDialogueNode* RRoot)
+bool UTreeLayoutStrategy_DE::ResolveConflict(UDialogueNode* LRoot, UDialogueNode* RRoot)
 {
 	TArray<UEdGraphNode_Dialogue*> RightContour, LeftContour;
 
@@ -160,7 +160,7 @@ bool UTreeLayoutStrategy::ResolveConflict(UDialogueNode* LRoot, UDialogueNode* R
 	}
 }
 
-void UTreeLayoutStrategy::GetLeftContour(UDialogueNode* RootNode, int32 Level, TArray<UEdGraphNode_Dialogue*>& Contour)
+void UTreeLayoutStrategy_DE::GetLeftContour(UDialogueNode* RootNode, int32 Level, TArray<UEdGraphNode_Dialogue*>& Contour)
 {
 	UEdGraphNode_Dialogue* EdNode_Node = EdGraph->NodeMap[RootNode];
 	if (Level >= Contour.Num())
@@ -178,7 +178,7 @@ void UTreeLayoutStrategy::GetLeftContour(UDialogueNode* RootNode, int32 Level, T
 	}
 }
 
-void UTreeLayoutStrategy::GetRightContour(UDialogueNode* RootNode, int32 Level, TArray<UEdGraphNode_Dialogue*>& Contour)
+void UTreeLayoutStrategy_DE::GetRightContour(UDialogueNode* RootNode, int32 Level, TArray<UEdGraphNode_Dialogue*>& Contour)
 {
 	UEdGraphNode_Dialogue* EdNode_Node = EdGraph->NodeMap[RootNode];
 	if (Level >= Contour.Num())
@@ -196,7 +196,7 @@ void UTreeLayoutStrategy::GetRightContour(UDialogueNode* RootNode, int32 Level, 
 	}
 }
 
-void UTreeLayoutStrategy::ShiftSubTree(UDialogueNode* RootNode, const FVector2D& Offset)
+void UTreeLayoutStrategy_DE::ShiftSubTree(UDialogueNode* RootNode, const FVector2D& Offset)
 {
 	UEdGraphNode_Dialogue* EdNode_Node = EdGraph->NodeMap[RootNode];
 	EdNode_Node->NodePosX += Offset.X;
@@ -213,7 +213,7 @@ void UTreeLayoutStrategy::ShiftSubTree(UDialogueNode* RootNode, const FVector2D&
 	}
 }
 
-void UTreeLayoutStrategy::UpdateParentNodePosition(UDialogueNode* ParentNode)
+void UTreeLayoutStrategy_DE::UpdateParentNodePosition(UDialogueNode* ParentNode)
 {
 	UEdGraphNode_Dialogue* EdNode_ParentNode = EdGraph->NodeMap[ParentNode];
 	if (ParentNode->ChildrenNodes.Num() % 2 == 0)

@@ -1,4 +1,4 @@
-#include "AutoLayout/ForceDirectedLayoutStrategy.h"
+#include "AutoLayout/ForceDirectedLayoutStrategy_DE.h"
 #include "DialogueSession.h"
 #include "DialogueNode.h"
 #include "Nodes/DialogueNode_Start.h"
@@ -19,19 +19,19 @@ static inline float GetRepulseForce(float X, float k)
 	return X != 0 ? k * k / X : TNumericLimits<float>::Max();
 }
 
-UForceDirectedLayoutStrategy::UForceDirectedLayoutStrategy()
+UForceDirectedLayoutStrategy_DE::UForceDirectedLayoutStrategy_DE()
 {
 	bRandomInit = false;
 	CoolDownRate = 10;
 	InitTemperature = 10.f;
 }
 
-UForceDirectedLayoutStrategy::~UForceDirectedLayoutStrategy()
+UForceDirectedLayoutStrategy_DE::~UForceDirectedLayoutStrategy_DE()
 {
 
 }
 
-void UForceDirectedLayoutStrategy::Layout(UEdGraph* _EdGraph)
+void UForceDirectedLayoutStrategy_DE::Layout(UEdGraph* _EdGraph)
 {
 	EdGraph = Cast<UEdGraph_DialogueSession>(_EdGraph);
 	check(EdGraph != nullptr);
@@ -51,7 +51,7 @@ void UForceDirectedLayoutStrategy::Layout(UEdGraph* _EdGraph)
 	PreTreeBound = LayoutOneTree(Cast<UDialogueNode>(Graph->StartNode), PreTreeBound);
 }
 
-FBox2D UForceDirectedLayoutStrategy::LayoutOneTree(UDialogueNode* RootNode, const FBox2D& PreTreeBound)
+FBox2D UForceDirectedLayoutStrategy_DE::LayoutOneTree(UDialogueNode* RootNode, const FBox2D& PreTreeBound)
 {
 	float Temp = InitTemperature;
 	FBox2D TreeBound = GetActualBounds(RootNode);

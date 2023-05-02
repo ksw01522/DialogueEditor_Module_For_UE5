@@ -7,15 +7,15 @@
 #include "DialogueAssetEditor/EdGraphNode_Dialogue.h"
 #include "DialogueAssetEditor/EdGraphNode_DialogueEdge.h"
 #include "DialogueAssetEditor/Settings_DialogueEditor.h"
-#include "AutoLayoutStrategy.generated.h"
+#include "AutoLayoutStrategy_DE.generated.h"
 
 UCLASS(abstract)
-class UAutoLayoutStrategy : public UObject
+class UAutoLayoutStrategy_DE : public UObject
 {
 	GENERATED_BODY()
 public:
-	UAutoLayoutStrategy();
-	virtual ~UAutoLayoutStrategy();
+	UAutoLayoutStrategy_DE();
+	virtual ~UAutoLayoutStrategy_DE();
 
 	virtual void Layout(UEdGraph* G) {};
 

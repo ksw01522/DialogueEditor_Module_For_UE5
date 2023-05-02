@@ -1,21 +1,21 @@
-#include "AutoLayout/AutoLayoutStrategy.h"
+#include "AutoLayout/AutoLayoutStrategy_DE.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "DialogueAssetEditor/SEdNode_DialogueNode.h"
 #include "DialogueNode.h"
 
-UAutoLayoutStrategy::UAutoLayoutStrategy()
+UAutoLayoutStrategy_DE::UAutoLayoutStrategy_DE()
 {
 	Settings = nullptr;
 	MaxIteration = 50;
 	OptimalDistance = 150;
 }
 
-UAutoLayoutStrategy::~UAutoLayoutStrategy()
+UAutoLayoutStrategy_DE::~UAutoLayoutStrategy_DE()
 {
 
 }
 
-FBox2D UAutoLayoutStrategy::GetNodeBound(UEdGraphNode* EdNode)
+FBox2D UAutoLayoutStrategy_DE::GetNodeBound(UEdGraphNode* EdNode)
 {
 	int32 NodeWidth = GetNodeWidth(Cast<UEdGraphNode_Dialogue>(EdNode));
 	int32 NodeHeight = GetNodeHeight(Cast<UEdGraphNode_Dialogue>(EdNode));
@@ -24,7 +24,7 @@ FBox2D UAutoLayoutStrategy::GetNodeBound(UEdGraphNode* EdNode)
 	return FBox2D(Min, Max);
 }
 
-FBox2D UAutoLayoutStrategy::GetActualBounds(UDialogueNode* RootNode)
+FBox2D UAutoLayoutStrategy_DE::GetActualBounds(UDialogueNode* RootNode)
 {
 	int Level = 0;
 	TArray<UDialogueNode*> CurrLevelNodes = { RootNode };
@@ -54,7 +54,7 @@ FBox2D UAutoLayoutStrategy::GetActualBounds(UDialogueNode* RootNode)
 	return Rtn;
 }
 
-void UAutoLayoutStrategy::RandomLayoutOneTree(UDialogueNode* RootNode, const FBox2D& Bound)
+void UAutoLayoutStrategy_DE::RandomLayoutOneTree(UDialogueNode* RootNode, const FBox2D& Bound)
 {
 	int Level = 0;
 	TArray<UDialogueNode*> CurrLevelNodes = { RootNode };
@@ -84,12 +84,12 @@ void UAutoLayoutStrategy::RandomLayoutOneTree(UDialogueNode* RootNode, const FBo
 	}
 }
 
-int32 UAutoLayoutStrategy::GetNodeWidth(UEdGraphNode_Dialogue* EdNode)
+int32 UAutoLayoutStrategy_DE::GetNodeWidth(UEdGraphNode_Dialogue* EdNode)
 {
 	return EdNode->SEdNode->GetCachedGeometry().GetLocalSize().X;
 }
 
-int32 UAutoLayoutStrategy::GetNodeHeight(UEdGraphNode_Dialogue* EdNode)
+int32 UAutoLayoutStrategy_DE::GetNodeHeight(UEdGraphNode_Dialogue* EdNode)
 {
 	return EdNode->SEdNode->GetCachedGeometry().GetLocalSize().Y;
 }
