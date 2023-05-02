@@ -9,7 +9,7 @@
 
 UDialogueEditorSettings::UDialogueEditorSettings()
 {
-	AutoLayoutStrategy = EAutoLayoutStrategy::Tree;
+	AutoLayoutStrategy = EAutoLayoutStrategy_DE::Tree;
 
 	bFirstPassOnly = false;
 

@@ -5,7 +5,7 @@
 #include "Settings_DialogueEditor.generated.h"
 
 UENUM(BlueprintType)
-enum class EAutoLayoutStrategy : uint8
+enum class EAutoLayoutStrategy_DE : uint8
 {
 	Tree,
 	ForceDirected,
@@ -26,7 +26,7 @@ public:
 	float OptimalDistance;
 
 	UPROPERTY(EditDefaultsOnly, AdvancedDisplay, Category = "AutoArrange")
-	EAutoLayoutStrategy AutoLayoutStrategy;
+	EAutoLayoutStrategy_DE AutoLayoutStrategy;
 
 	UPROPERTY(EditDefaultsOnly, AdvancedDisplay, Category = "AutoArrange")
 	int32 MaxIteration;

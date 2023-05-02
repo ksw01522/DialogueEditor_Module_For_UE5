@@ -23,8 +23,8 @@
 #include "Editor/UnrealEd/Public/Kismet2/BlueprintEditorUtils.h"
 #include "Kismet2/KismetEditorUtilities.h"
 #include "EdGraphUtilities.h"
-#include "AutoLayout/TreeLayoutStrategy.h"
-#include "AutoLayout/ForceDirectedLayoutStrategy.h"
+#include "AutoLayout/TreeLayoutStrategy_DE.h"
+#include "AutoLayout/ForceDirectedLayoutStrategy_DE.h"
 
 #include "DialogueEditor.h"
 #
@@ -729,10 +729,10 @@ void FAssetEditor_Dialogue::AutoArrange()
 	UAutoLayoutStrategy_DE* LayoutStrategy = nullptr;
 	switch (DialogueEditorSettings->AutoLayoutStrategy)
 	{
-	case EAutoLayoutStrategy::Tree:
+	case EAutoLayoutStrategy_DE::Tree:
 		LayoutStrategy = NewObject<UAutoLayoutStrategy_DE>(EdGraph, UTreeLayoutStrategy_DE::StaticClass());
 		break;
-	case EAutoLayoutStrategy::ForceDirected:
+	case EAutoLayoutStrategy_DE::ForceDirected:
 		LayoutStrategy = NewObject<UAutoLayoutStrategy_DE>(EdGraph, UForceDirectedLayoutStrategy_DE::StaticClass());
 		break;
 	default:
