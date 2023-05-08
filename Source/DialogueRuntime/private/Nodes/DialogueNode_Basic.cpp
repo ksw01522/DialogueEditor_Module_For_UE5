@@ -23,14 +23,17 @@ UDialogueNode_Basic::UDialogueNode_Basic()
 
 UDataTable* UDialogueNode_Basic::GetDialogueTextStyleSet() const
 {
-	if (DialogueTextStyleSet != nullptr)		{ return DialogueTextStyleSet; }
-	else										{ return DialogueSession->GetDialogueTextStyleSet(); }
+	return DialogueTextStyleSet;	
 }
 
-TArray<TSubclassOf<class URichTextBlockDecorator>> UDialogueNode_Basic::GetDecoClasses() const
+TArray<TSubclassOf<class URichTextBlockDecorator>> UDialogueNode_Basic::GetUMGDecoClasses() const
 {
-	if (DialogueDecoratorClasses.IsEmpty())		{ return GetDialogueSession()->GetDialogueDecoClasses();} 
-	else										{ return DialogueDecoratorClasses;}
+	return DialogueUMGDecoratorClasses;
+}
+
+TArray<TSubclassOf<class USRichTextBlockDecorator>> UDialogueNode_Basic::GetSlateDecoClasses() const
+{
+	return DialogueSlateDecoratorClasses;
 }
 
 FString UDialogueNode_Basic::GetDialoguerName(EDialogueLanguage Language)

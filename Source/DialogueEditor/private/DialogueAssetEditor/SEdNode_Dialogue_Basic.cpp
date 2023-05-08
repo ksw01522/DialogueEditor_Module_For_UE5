@@ -20,6 +20,7 @@
 #include "Settings_DialogueEditor.h"
 #include "Components/RichTextBlock.h"
 #include "RenderingThread.h"
+#include "SRichTextBlockDecorator.h"
 
 template< class ObjectType >
 struct FDialogueDeferredDeletor : public FDeferredCleanupInterface
@@ -130,11 +131,6 @@ FORCEINLINE TSharedPtr< ObjectType > MakeDialogueShareableDeferredCleanup(Object
 	return MakeShareable(InObject, [](ObjectType* ObjectToDelete) { BeginCleanup(new FDialogueDeferredDeletor<ObjectType>(ObjectToDelete)); });
 }
 
-void SEdNode_Dialogue_Basic::GetDecoClasses(TArray<TSubclassOf<URichTextBlockDecorator>>& OutDecoClasses) const
-{
-	EdNode_Basic->GetDecoClasses(OutDecoClasses);
-}
-
 void SEdNode_Dialogue_Basic::MakeStyleInstance()
 {
 	StyleInstance.Reset();
@@ -162,26 +158,72 @@ void SEdNode_Dialogue_Basic::MakeStyleInstance()
 
 void SEdNode_Dialogue_Basic::MakeDecoInstance(TArray<TSharedRef<ITextDecorator>>& OutDecorators)
 {
-	TArray<TSubclassOf<URichTextBlockDecorator>> DecoratorClasses;
-	GetDecoClasses(DecoratorClasses);
+	ERichTextBlockType TextBlockType = EdNode_Basic->GetTextBlockType();
+	InstanceSlateDecorators.Empty();
+	InstanceUMGDecorators.Empty();
 
-	for (TSubclassOf<URichTextBlockDecorator> DecoratorClass : DecoratorClasses)
+	switch (TextBlockType)
+	{
+		case ERichTextBlockType::SLATE:
+			MakeSlateDecoInstance(OutDecorators);
+		break;
+
+		case ERichTextBlockType::UMG:
+			MakeUMGDecoInstance(OutDecorators);
+		break;
+	}
+}
+
+void SEdNode_Dialogue_Basic::MakeUMGDecoInstance(TArray<TSharedRef<class ITextDecorator>>& OutDecorators)
+{
+	TArray<TSubclassOf<URichTextBlockDecorator>> DecoratorUMGClasses;
+
+	for (TSubclassOf<URichTextBlockDecorator> DecoratorClass : DecoratorUMGClasses)
 	{
 		if (UClass* ResolvedClass = DecoratorClass.Get())
 		{
 			if (!ResolvedClass->HasAnyClassFlags(CLASS_Abstract))
 			{
-				URichTextBlockDecorator* Decorator = NewObject<URichTextBlockDecorator>(RichTextBlock, ResolvedClass);
-				InstanceDecorators.Add(Decorator);
+				URichTextBlockDecorator* Decorator = NewObject<URichTextBlockDecorator>(nullptr, ResolvedClass);
+				InstanceUMGDecorators.Add(Decorator);
 			}
 		}
 	}
 
-	for (URichTextBlockDecorator* Decorator : InstanceDecorators)
+	for (URichTextBlockDecorator* Decorator : InstanceUMGDecorators)
 	{
 		if (Decorator)
 		{
 			TSharedPtr<ITextDecorator> TextDecorator = Decorator->CreateDecorator(RichTextBlock);
+			if (TextDecorator.IsValid())
+			{
+				OutDecorators.Add(TextDecorator.ToSharedRef());
+			}
+		}
+	}
+}
+
+void SEdNode_Dialogue_Basic::MakeSlateDecoInstance(TArray<TSharedRef<class ITextDecorator>>& OutDecorators)
+{
+	TArray<TSubclassOf<USRichTextBlockDecorator>> DecoraterSlateClasses;
+
+	for (TSubclassOf<USRichTextBlockDecorator> DecoratorClass : DecoraterSlateClasses)
+	{
+		if (UClass* ResolvedClass = DecoratorClass.Get())
+		{
+			if (!ResolvedClass->HasAnyClassFlags(CLASS_Abstract))
+			{
+				USRichTextBlockDecorator* Decorator = NewObject<USRichTextBlockDecorator>(nullptr, ResolvedClass);
+				InstanceSlateDecorators.Add(Decorator);
+			}
+		}
+	}
+
+	for (USRichTextBlockDecorator* Decorator : InstanceSlateDecorators)
+	{
+		if (Decorator)
+		{
+			TSharedPtr<ITextDecorator> TextDecorator = Decorator->CreateDecorator(DialogueDefaultTextStyle);
 			if (TextDecorator.IsValid())
 			{
 				OutDecorators.Add(TextDecorator.ToSharedRef());

@@ -10,6 +10,14 @@
 /**
  * 
  */
+
+UENUM(BlueprintType)
+enum class ERichTextBlockType : uint8
+{
+	UMG,
+	SLATE
+};
+
 UCLASS()
 class DIALOGUERUNTIME_API UDialogueNode_Basic : public UDialogueNode
 {
@@ -26,7 +34,8 @@ protected:
 	UPROPERTY()
 	FDialogueLocalization Dialogue_String;
 
-
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Dialogue")
+	ERichTextBlockType RichTextBlockType;
 
 #if WITH_EDITORONLY_DATA
 
@@ -60,8 +69,12 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "DialogueTextStyle", meta = (RequiredAssetDataTags = "RowStructure=/Script/UMG.RichTextStyleRow"))
 	UDataTable* DialogueTextStyleSet;
 
-	UPROPERTY(EditAnywhere, Category = "DialogueTextStyle")
-	TArray<TSubclassOf<class URichTextBlockDecorator>> DialogueDecoratorClasses;
+	UPROPERTY(EditAnywhere, Category = "DialogueTextStyle", meta = (EditCondition = "RichTextBlockType == ERichTextBlockType::UMG", EditConditionHides))
+	TArray<TSubclassOf<class URichTextBlockDecorator>> DialogueUMGDecoratorClasses;
+
+	UPROPERTY(EditAnywhere, Category = "DialogueTextStyle", meta = (EditCondition = "RichTextBlockType == ERichTextBlockType::SLATE", EditConditionHides))
+	TArray<TSubclassOf<class USRichTextBlockDecorator>> DialogueSlateDecoratorClasses;
+
 
 public:
 #if WITH_EDITORONLY_DATA
@@ -74,10 +87,14 @@ public:
 	UDialogueNode_Basic();
 
 	UDataTable* GetDialogueTextStyleSet() const;
-	TArray<TSubclassOf<class URichTextBlockDecorator>> GetDecoClasses() const;
+	TArray<TSubclassOf<class URichTextBlockDecorator>> GetUMGDecoClasses() const;
+	TArray<TSubclassOf<class USRichTextBlockDecorator>> GetSlateDecoClasses() const;
 
 	FString GetDialoguerName(EDialogueLanguage Language);
 	FString GetDialogueString(EDialogueLanguage Language);
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "DialogueStyle")
+	ERichTextBlockType GetRichTextBlockType() const {return RichTextBlockType;}
 
 #if WITH_EDITOR
 

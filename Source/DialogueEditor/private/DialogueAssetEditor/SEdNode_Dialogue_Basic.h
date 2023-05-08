@@ -41,15 +41,18 @@ private:
 	TObjectPtr<class URichTextBlock> RichTextBlock = nullptr;
 
 	UPROPERTY(Transient)
-	TArray<TObjectPtr<class URichTextBlockDecorator>> InstanceDecorators;
+	TArray<TObjectPtr<class URichTextBlockDecorator>> InstanceUMGDecorators;
+	UPROPERTY(Transient)
+	TArray<TObjectPtr<class USRichTextBlockDecorator>> InstanceSlateDecorators;
+
 	TSharedPtr<class FSlateStyleSet> StyleInstance;
 	UPROPERTY(Transient)
 	FTextBlockStyle DialogueDefaultTextStyle;
 
-	void GetDecoClasses(TArray<TSubclassOf<URichTextBlockDecorator>>& OutDecoClasses) const;
-
 	void MakeStyleInstance();
 	void MakeDecoInstance(TArray< TSharedRef<class ITextDecorator > >& OutDecorators);
+	void MakeUMGDecoInstance(TArray< TSharedRef<class ITextDecorator > >& OutDecorators);
+	void MakeSlateDecoInstance(TArray< TSharedRef<class ITextDecorator > >& OutDecorators);
 
 /////////////////////////////////////////////////////////////////////////
 protected:

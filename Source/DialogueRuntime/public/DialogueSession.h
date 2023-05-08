@@ -44,13 +44,6 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Dialogue")
 	bool bEdgeEnabled;
 
-private:
-	UPROPERTY(EditAnywhere, Category = "DialogueTextStyle", meta = (RequiredAssetDataTags = "RowStructure=/Script/UMG.RichTextStyleRow"))
-	UDataTable* DialogueTextStyleSet;
-
-	UPROPERTY(EditAnywhere, Category = "DialogueTextStyle")
-	TArray<TSubclassOf<URichTextBlockDecorator>> DecoratorClasses;
-
 public:
 #if WITH_EDITOR
 	//UFUNCTION(BlueprintCallable, Category = "Dialogue")
@@ -61,13 +54,13 @@ public:
 
 #if WITH_EDITORONLY_DATA
 	UPROPERTY()
-		class UEdGraph* EdGraph;
+	class UEdGraph* EdGraph;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Dialogue_Editor")
-		bool bCanRenameNode;
+	bool bCanRenameNode;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Dialogue_Editor")
-		bool bCanBeCyclical;
+	bool bCanBeCyclical;
 #endif
 
 public:
@@ -92,12 +85,6 @@ public:
 public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Dialogue")
 	UDialogueNode_Start* GetStartNode() const;
-
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Dialogue")
-	UDataTable* GetDialogueTextStyleSet() const {return DialogueTextStyleSet;}
-
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Dialogue")
-	TArray<TSubclassOf<class URichTextBlockDecorator>> GetDialogueDecoClasses() const {return DecoratorClasses;}
 
 #if WITH_EDITOR
 	

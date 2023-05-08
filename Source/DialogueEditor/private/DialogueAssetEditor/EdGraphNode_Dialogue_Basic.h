@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Nodes/DialogueNode_Basic.h"
 #include "DialogueAssetEditor/EdGraphNode_Dialogue.h"
 #include "EdGraphNode_Dialogue_Basic.generated.h"
 
 /**
  * 
  */
- class UDialogueNode_Basic;
-
+ 
 UCLASS()
 class UEdGraphNode_Dialogue_Basic : public UEdGraphNode_Dialogue
 {
@@ -22,7 +22,10 @@ public:
 	UDialogueNode_Basic* GetDialogueBasicNode() const;
 
 	UDataTable* GetDialogueTextStyleSet() const;
-	void GetDecoClasses(TArray<TSubclassOf<class URichTextBlockDecorator>>& OutDecoClasses) const;
+	TArray<TSubclassOf<class URichTextBlockDecorator>> GetUMGDecoClasses() const;
+	TArray<TSubclassOf<class USRichTextBlockDecorator>> GetSlateDecoClasses() const;
+	ERichTextBlockType GetTextBlockType() const;
+
 
 	FString GetDialoguerName() const;
 	FString GetDialoguerName_Original() const;

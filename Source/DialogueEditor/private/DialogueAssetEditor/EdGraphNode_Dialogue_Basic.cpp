@@ -2,10 +2,10 @@
 
 
 #include "DialogueAssetEditor/EdGraphNode_Dialogue_Basic.h"
-#include "Nodes/DialogueNode_Basic.h"
 #include "DialogueEditor.h"
 #include "DialogueAssetEditor/SEdNode_Dialogue_Basic.h"
 #include "Components/RichTextBlockDecorator.h"
+#include "SRichTextBlockDecorator.h"
 
 UDialogueNode_Basic* UEdGraphNode_Dialogue_Basic::GetDialogueBasicNode() const
 {
@@ -21,10 +21,21 @@ UDataTable* UEdGraphNode_Dialogue_Basic::GetDialogueTextStyleSet() const
 	return BasicNode->GetDialogueTextStyleSet();
 }
 
-void UEdGraphNode_Dialogue_Basic::GetDecoClasses(TArray<TSubclassOf<URichTextBlockDecorator>>& OutDecoClasses) const
+ERichTextBlockType UEdGraphNode_Dialogue_Basic::GetTextBlockType() const
 {
-	OutDecoClasses = GetDialogueBasicNode()->GetDecoClasses();
+	return GetDialogueBasicNode()->GetRichTextBlockType();
 }
+
+TArray<TSubclassOf<USRichTextBlockDecorator>> UEdGraphNode_Dialogue_Basic::GetSlateDecoClasses() const
+{
+	return GetDialogueBasicNode()->GetSlateDecoClasses();
+}
+
+TArray<TSubclassOf<URichTextBlockDecorator>> UEdGraphNode_Dialogue_Basic::GetUMGDecoClasses() const
+{
+	return GetDialogueBasicNode()->GetUMGDecoClasses();
+}
+
 
 FString UEdGraphNode_Dialogue_Basic::GetDialoguerName() const
 {

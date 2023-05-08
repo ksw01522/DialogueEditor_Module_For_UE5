@@ -19,6 +19,7 @@
 #include "DialogueEditorHeaders.h"
 #include "DialogueHeaders.h"
 #include "Styling/AppStyle.h"
+#include "Components/RichTextBlock.h"
 
 
 #define LOCTEXT_NAMESPACE "EdGraphNode_DialogueNode"
