@@ -46,5 +46,5 @@ public:
 	
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Dialogue")
-	FActingDialogueHandle GetDialogueHandle() { return DialogueHandle; };
+	FActingDialogueHandle& GetDialogueHandle() { return DialogueHandle; };
 };
